@@ -4,44 +4,90 @@
   crossorigin="anonymous"
   referrerpolicy="no-referrer"
 ></script>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
 <script src="./lib/tools.js"></script>
 
-<div id="app">
-  <h1 class="text-center pb-5">ClassicDice verify</h1>
+<div class="container max-w-2xl px-4 mx-auto">
+  <h1 class="text-3xl font-semibold py-8">ClassicDice verify</h1>
   <hr />
-  <form class="py-5">
-    <h2 class="text-center">Input</h2>
-    <div class="form-group">
-      <input v-model="client_seed" placeholder="Client Seed" />
-    </div>
-    <div class="form-group">
-      <input v-model="server_seed" placeholder="Server Seed" />
-    </div>
-    <div class="form-group">
-      <input v-model="server_seed_hash" placeholder="Server Seed Hash" />
-    </div>
-    <div class="form-group">
-      <input v-model="nonce" placeholder="Nonce" />
+  <form class="flex flex-col gap-6 py-6">
+    <h2 class="text-2xl">Results</h2>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <label class="uppercase text-xs font-medium text-gray-400"
+          >Client Seed</label
+        >
+        <input
+          class="py-2 px-2 border rounded-md text-sm"
+          v-model="client_seed"
+          placeholder="Client Seed"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="uppercase text-xs font-medium text-gray-400"
+          >Server Seed</label
+        >
+        <input
+          class="py-2 px-2 border rounded-md text-sm"
+          v-model="server_seed"
+          placeholder="Server Seed"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="uppercase text-xs font-medium text-gray-400"
+          >Server Seed Hash</label
+        >
+        <input
+          class="py-2 px-2 border rounded-md text-sm"
+          v-model="server_seed_hash"
+          placeholder="Server Seed Hash"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="uppercase text-xs font-medium text-gray-400">Nonce</label>
+        <input
+          class="py-2 px-2 border rounded-md text-sm"
+          v-model="nonce"
+          placeholder="Nonce"
+        />
+      </div>
     </div>
   </form>
   <hr />
-  <form class="py-5">
-    <h2 class="text-center pb-5">Output</h2>
-    <div class="form-group">
-      <label>sha256(server_seed)</label>
-      <input class="form-control" readonly :value="sha256(server_seed)" />
-    </div>
-    <div class="form-group">
-      <label>hmac_sha256(client_seed:nonce, server_seed)</label>
-      <input class="form-control" readonly :value="result_hash" />
+  <form class="py-8 flex flex-col gap-6">
+    <h2 class="text-2xl">Output</h2>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <label class="uppercase text-xs font-medium text-gray-400"
+          >sha256(server_seed)</label
+        >
+        <input
+          class="py-2 px-2 border rounded-md text-sm"
+          disabled
+          readonly
+          :value="sha256(server_seed)"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="uppercase text-xs font-medium text-gray-400"
+          >hmac_sha256(client_seed:nonce, server_seed)</label
+        >
+        <input
+          class="py-2 px-2 border rounded-md text-sm"
+          disabled
+          readonly
+          :value="result_hash"
+        />
+      </div>
     </div>
   </form>
   <hr />
-  <form class="py-5">
-    <h2 class="text-center pb-5">Results</h2>
-    <h5>Final Result</h5>
-    <h5>hmac_sha256(client_seed:nonce, server_seed)</h5>
+  <form class="py-6 gap-6 flex flex-col">
+    <h2 class="text-2xl">Results</h2>
+    <h4 class="text-xl font-medium">Final Result</h4>
+    <h5 class="text-lg font-medium">
+      hmac_sha256(client_seed:nonce, server_seed)
+    </h5>
     <div class="form-group" style="overflow-x: auto">
       <table class="table table-sm table-bordered">
         <tbody>
@@ -66,8 +112,8 @@
         </tbody>
       </table>
     </div>
-    <h5>Bytes to Number</h5>
-    <div class="form-group">
+    <h5 class="text-lg font-medium">Bytes to Number</h5>
+    <div class="prose text-base pt-2">
       ({{results.hex[0] + ', ' + results.hex[1] + ', ' + results.hex[2] + ', ' +
       results.hex[3]}}) -> [0, ... 4] =
       <span class="text-success"
