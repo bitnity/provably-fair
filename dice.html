@@ -8,7 +8,7 @@
 <script src="./lib/tools.js"></script>
 
 <div id="app" class="container max-w-2xl px-4 mx-auto">
-  <h1 class="text-3xl font-semibold py-8">ClassicDice verify</h1>
+  <h1 class="text-3xl font-semibold py-8">Dice verification</h1>
   <hr />
   <form class="flex flex-col gap-6 py-6">
     <h2 class="text-2xl">Results</h2>
@@ -34,16 +34,6 @@
         />
       </div>
       <div class="flex flex-col gap-2">
-        <label class="uppercase text-xs font-medium text-gray-400"
-          >Server Seed Hash</label
-        >
-        <input
-          class="py-2 px-2 border rounded-md text-sm"
-          v-model="server_seed_hash"
-          placeholder="Server Seed Hash"
-        />
-      </div>
-      <div class="flex flex-col gap-2">
         <label class="uppercase text-xs font-medium text-gray-400">Nonce</label>
         <input
           class="py-2 px-2 border rounded-md text-sm"
@@ -62,7 +52,7 @@
           >sha256(server_seed)</label
         >
         <input
-          class="py-2 px-2 border rounded-md text-sm"
+          class="py-2 px-2 border rounded-md text-sm disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-500"
           disabled
           readonly
           :value="sha256(server_seed)"
@@ -73,7 +63,7 @@
           >hmac_sha256(client_seed:nonce, server_seed)</label
         >
         <input
-          class="py-2 px-2 border rounded-md text-sm"
+          class="py-2 px-2 border rounded-md text-sm disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-500"
           disabled
           readonly
           :value="result_hash"
@@ -95,7 +85,7 @@
             <td
               v-for="(item, index) in results.dec"
               :key="index"
-              :class="{'text-muted': index > 3}"
+              :class="[{'text-slate-300': index > 3}, 'border p-2']"
             >
               {{ item }}
             </td>
@@ -104,7 +94,7 @@
             <td
               v-for="(item, index) in results.hex"
               :key="index"
-              :class="{'text-muted': index > 3}"
+              :class="[{'text-slate-300': index > 3}, 'border p-2']"
             >
               {{ item }}
             </td>
@@ -114,46 +104,29 @@
     </div>
     <h5 class="text-lg font-medium">Bytes to Number</h5>
     <div class="prose text-base pt-2">
-      ({{results.hex[0] + ', ' + results.hex[1] + ', ' + results.hex[2] + ', ' +
-      results.hex[3]}}) -> [0, ... 4] =
-      <span class="text-success"
-        >{{Math.floor(numResult * 100.01 * 100) / 100}}</span
-      >
-      <div>
-        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span>
-          {{Number(results.hex[0] /
-          256).toFixed(9)}}&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span>({{results.hex[0]}} / (256 ^ 1))</span>
+      <div class="pb-5">
+        ({{results.hex[0] + ', ' + results.hex[1] + ', ' + results.hex[2] + ', '
+        + results.hex[3]}}) -> [0, ... 4] =
+        <span class="text-green-500"
+          >{{Math.floor(numResult * 100.01 * 100) / 100}}</span
+        >
       </div>
-      <div>
-        <span>+&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span
-          >{{Number(results.hex[1] / (256 *
-          256)).toFixed(9)}}&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span>({{results.hex[1]}} / (256 ^ 2))</span>
+
+      <div v-for="(n, i) in 4" :key="i">
+        <span :class="[{'invisible': i === 0}, 'mr-3']">+</span>
+        <span class="mr-3"
+          >{{Number(results.hex[i] / (256 ** (n))).toFixed(9)}}</span
+        >
+        <span>({{results.hex[i]}} / (256 ^ {{n}}))</span>
       </div>
+
       <div>
-        <span>+&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span
-          >{{Number(results.hex[2] / (256 * 256 *
-          256)).toFixed(9)}}&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span>({{results.hex[2]}} / (256 ^ 3))</span>
+        <span class="mr-3">=</span><span class="mr-3">{{numResult}}</span>(*
+        10001 / 100)
       </div>
-      <div>
-        <span>+&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span
-          >{{Number(results.hex[3] / (256 * 256 * 256 *
-          256)).toFixed(9)}}&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span>({{results.hex[3]}} / (256 ^ 4))</span>
-      </div>
-      <div>
-        <span>=&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span>{{numResult}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>(* 10001 / 100)
-      </div>
-      <div>
-        <span>=&nbsp;&nbsp;&nbsp;&nbsp;</span
-        ><span class="text-success"
+      <div class="pt-5">
+        <span class="mr-3">=</span
+        ><span class="text-green-500"
           >{{Number(numResult * 100.01).toFixed(9)}}</span
         >
       </div>
